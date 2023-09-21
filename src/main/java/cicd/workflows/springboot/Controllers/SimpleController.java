@@ -20,6 +20,6 @@ public class SimpleController {
     @GetMapping("/question")
     public ResponseEntity<IntroDto> getQuestion() {
         IntroDto question = new IntroDto(LocalDate.now(), "How are you? Long time no see!");
-        return new ResponseEntity<>(introDto, HttpStatus.OK);
+        return new ResponseEntity<>(question, HttpStatus.OK);
     }
 }
