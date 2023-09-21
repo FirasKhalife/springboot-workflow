@@ -1,0 +1,34 @@
+name: Spring boot workflow
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Stop and Remove the Docker Container
+        run: |
+          docker stop spring-boot-app
+          docker rm spring-boot-app
+        continue-on-error: true
+
+      - name: Remove Previous Docker Image
+        run: |
+          docker rmi "$DOCKER_USERNAME/spring-boot-app:dev"
+        continue-on-error: true
+
+      - name: Build and Run the application
+        run: |
+          docker build -t "$DOCKER_USERNAME/spring-boot-app:dev" .
+          docker run --name spring-boot-app -d "$DOCKER_USERNAME/spring-boot-app:dev"
+
+      - name: Containerize and Push to Docker Hub
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          docker login -u "$DOCKER_USERNAME" -p "$DOCKER_ACCESS_TOKEN"
+          docker push "$DOCKER_USERNAME/spring-boot-app:dev"
