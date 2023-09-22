@@ -1,4 +1,4 @@
-name: Spring boot workflow
+name: Spring Boot Workflow
 
 on:
   push:
