@@ -40,6 +40,6 @@ public class CalculatorServiceTest {
         int result = calculatorService.subtract(8, 3);
 
         // Verify that the result matches the expected value
-        assertEquals(9, result);
+        assertEquals(5, result);
     }
 }
