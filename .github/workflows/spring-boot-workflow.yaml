@@ -2,7 +2,8 @@ name: Spring Boot Workflow
 
 on:
   push:
-
+    branches:
+      - dev
 jobs:
   build:
     runs-on: self-hosted
