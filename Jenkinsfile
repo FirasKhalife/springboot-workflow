@@ -18,13 +18,13 @@ pipeline {
 
         stage('Check Docker version') {
             steps {
-                cmd 'docker -v'
+                bat 'docker -v'
             }
         }
 
         stage('Build Project') {
             steps {
-                cmd 'mvn clean install'
+                bat 'mvn clean install'
             }
 
             post {
@@ -51,16 +51,16 @@ pipeline {
             }
 
             steps {
-                cmd 'docker build -t $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev .'
-                cmd 'echo $DOCKERHUB_CREDENTIALS_PSW| docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                cmd 'docker push $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev'
+                bat 'docker build -t $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev .'
+                bat 'echo $DOCKERHUB_CREDENTIALS_PSW| docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                bat 'docker push $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev'
             }
 
             post {
                 always {
                   script {
                         try {
-                            cmd 'docker logout'
+                            bat 'docker logout'
                         } catch (Exception e) {
                             currentBuild.result = 'FAILURE'
                         }
