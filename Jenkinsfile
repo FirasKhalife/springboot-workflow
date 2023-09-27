@@ -35,7 +35,15 @@ pipeline {
                 always {
                     script {
                         try {
-                            junit 'target/surefire-reports/*.xml'
+                            def testsPath = 'target/surefire-reports/*.xml'
+                            def junitResults = junit testsPath
+                            
+                            publishChecks name: 'Test Results', 
+                                title: 'Pipeline Check', 
+                                summary: junitResults ? 'success' : 'failure',
+                                text: junitResults ? 'All tests passed' : 'Test failures found',
+                                actions: [[junit(name: 'JUnit Test Report', path: testsPath)]]
+
                         } catch (Exception e) {
                             currentBuild.result = 'FAILURE'
                         }
