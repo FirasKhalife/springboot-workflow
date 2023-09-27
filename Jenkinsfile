@@ -14,7 +14,7 @@ pipeline {
 
     stages {
         
-        // SCM is already checked out (heavyweight checkout - configured in the Web UI) 
+        // SCM is already checked out (heavyweight checkout - configured in the Web UI)
 
         stage('Build Project') {
             steps {
