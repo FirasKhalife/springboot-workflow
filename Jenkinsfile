@@ -20,10 +20,18 @@ pipeline {
             steps {
                 sh 'mvn clean install'
             }
-        }
 
-        post {
-            junit 'target/surefire-reports/*.xml' 
+            post {
+                always {
+                    script {
+                        try {
+                            junit 'target/surefire-reports/*.xml'
+                        } catch (Exception e) {
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
         }
 
         // only on pushes to the 'dev' branch
@@ -36,27 +44,21 @@ pipeline {
                 }
             }
 
-            stage('Build Docker Image') {
-                steps {
-                    sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev .'
-                }
-            }
-
-            stage('Login to DockerHub') {
-                steps {
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW| docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                }
-            }
-
-            stage('Push Image to DockerHub') {
-                steps {
-                    sh 'docker push $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev'
-                }
+            steps {
+                sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev .'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW| docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev'
             }
 
             post {
                 always {
-                    sh 'docker logout'
+                  script {
+                        try {
+                            sh 'docker logout'
+                        } catch (Exception e) {
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
                 }
             }
         }
