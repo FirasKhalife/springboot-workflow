@@ -1,34 +1,35 @@
-name: Spring Boot Workflow
+# name: Spring Boot Workflow
 
-on:
-  push:
+# on:
+#   push:
+#     branches:
+#       - dev
+# jobs:
+#   build:
+#     runs-on: self-hosted
 
-jobs:
-  build:
-    runs-on: self-hosted
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v2
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+#       - name: Stop and Remove the Docker Container
+#         run: |
+#           docker stop spring-boot-app
+#           docker rm spring-boot-app
+#         continue-on-error: true
 
-      - name: Stop and Remove the Docker Container
-        run: |
-          docker stop spring-boot-app
-          docker rm spring-boot-app
-        continue-on-error: true
+#       - name: Remove Previous Docker Image
+#         run: |
+#           docker rmi "${{ secrets.DOCKER_USERNAME }}/spring-boot-app:dev"
+#         continue-on-error: true
 
-      - name: Remove Previous Docker Image
-        run: |
-          docker rmi "${{ secrets.DOCKER_USERNAME }}/spring-boot-app:dev"
-        continue-on-error: true
+#       - name: Build and Run the application
+#         run: |
+#           docker build -t "${{ secrets.DOCKER_USERNAME }}/spring-boot-app:dev" .
+#           docker run --name spring-boot-app -d -p 8080:8080 "${{ secrets.DOCKER_USERNAME }}/spring-boot-app:dev"
 
-      - name: Build and Run the application
-        run: |
-          docker build -t "${{ secrets.DOCKER_USERNAME }}/spring-boot-app:dev" .
-          docker run --name spring-boot-app -d -p 8080:8080 "${{ secrets.DOCKER_USERNAME }}/spring-boot-app:dev"
-
-      - name: Containerize and Push to Docker Hub
-        if: github.ref == 'refs/heads/dev'
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          docker push "${{ secrets.DOCKER_USERNAME }}/spring-boot-app:dev"
+#       - name: Containerize and Push to Docker Hub
+#         if: github.ref == 'refs/heads/dev'
+#         run: |
+#           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
+#           docker push "${{ secrets.DOCKER_USERNAME }}/spring-boot-app:dev"

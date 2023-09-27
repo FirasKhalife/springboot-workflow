@@ -1,28 +1,28 @@
-name: Status Checks Workflow
+# name: Status Checks Workflow
 
-on:
-  pull_request:
-    branches:
-      - dev
+# on:
+#   pull_request:
+#     branches:
+#       - dev
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v2
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+#       - name: Set up Java
+#         uses: actions/setup-java@v2
+#         with:
+#           distribution: 'zulu'
+#           java-version: '17'
 
-      - name: Build and Test
-        id: build-and-test
-        run: mvn clean install
+#       - name: Build and Test
+#         id: build-and-test
+#         run: mvn clean install
 
-      - name: Report Test Status
-        if: steps.build-and-test.outcome == 'success'
-        run: echo "Tests passed"
+#       - name: Report Test Status
+#         if: steps.build-and-test.outcome == 'success'
+#         run: echo "Tests passed"
