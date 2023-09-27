@@ -37,12 +37,13 @@ pipeline {
                         try {
                             def testsPath = 'target/surefire-reports/*.xml'
                             def junitResults = junit testsPath
-                            
+
                             publishChecks name: 'Test Results', 
                                 title: 'Pipeline Check', 
                                 summary: junitResults ? 'success' : 'failure',
                                 text: junitResults ? 'All tests passed' : 'Test failures found',
-                                actions: [[junit(name: 'JUnit Test Report', path: testsPath)]]
+                                detailsURL: 'https://github.com/FirasKhalife/springboot-workflow.git',
+                                actions: [[label:'an-user-request-action', description:'actions allow users to request pre-defined behaviours', identifier:'an unique identifier']]
 
                         } catch (Exception e) {
                             currentBuild.result = 'FAILURE'
