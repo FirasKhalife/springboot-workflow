@@ -16,9 +16,15 @@ pipeline {
         
         // SCM is already checked out (heavyweight checkout - configured in the Web UI)
 
+        stage('Check Docker version') {
+            steps {
+                cmd 'docker -v'
+            }
+        }
+
         stage('Build Project') {
             steps {
-                sh 'mvn clean install'
+                cmd 'mvn clean install'
             }
 
             post {
@@ -45,16 +51,16 @@ pipeline {
             }
 
             steps {
-                sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev .'
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW| docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev'
+                cmd 'docker build -t $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev .'
+                cmd 'echo $DOCKERHUB_CREDENTIALS_PSW| docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                cmd 'docker push $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev'
             }
 
             post {
                 always {
                   script {
                         try {
-                            sh 'docker logout'
+                            cmd 'docker logout'
                         } catch (Exception e) {
                             currentBuild.result = 'FAILURE'
                         }
