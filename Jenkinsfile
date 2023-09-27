@@ -18,10 +18,6 @@ pipeline {
         jdk 'jdk17'
     }
 
-    environment {
-        DOCKERHUB_CREDENTIALS=credentials('dockerhub')
-    }
-
     stages {
         
         // SCM is already checked out (heavyweight checkout - configured in the Web UI) 
@@ -62,9 +58,15 @@ pipeline {
             }
 
             steps {
-                bat 'docker build -t ${DOCKERHUB_CREDENTIALS_USR}/spring-boot-app:dev .'
-                bat 'echo ${DOCKERHUB_CREDENTIALS_PSW}| docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin'
-                bat 'docker push ${DOCKERHUB_CREDENTIALS_USR}/spring-boot-app:dev'
+                withCredentials([usernamePassword(
+                                    credentialsId: 'dockerhub', 
+                                    usernameVariable: 'DOCKERHUB_CREDENTIALS_USR', 
+                                    passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW'
+                                    )]) {
+                    bat 'docker build -t $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev .'
+                    bat 'echo $DOCKERHUB_CREDENTIALS_PSW| docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                    bat 'docker push $DOCKERHUB_CREDENTIALS_USR/spring-boot-app:dev'
+                }
             }
 
             post {
