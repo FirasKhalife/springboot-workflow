@@ -16,12 +16,6 @@ pipeline {
         
         // SCM is already checked out (heavyweight checkout - configured in the Web UI)
 
-        stage('Check Docker version') {
-            steps {
-                echo "${env.GIT_BRANCH}"
-            }
-        }
-
         stage('Build Project') {
             steps {
                 bat 'mvn clean install'
@@ -44,9 +38,7 @@ pipeline {
         stage('Containerize and Push to Docker Hub') {
             when {
                 expression {
-                    currentBuild.rawBuild.getCause(hudson.triggers.SCMTrigger.SCMTriggerCause)
-                        .getShortDescription()
-                        .contains("refs/heads/dev")
+                    "${env.GIT_BRANCH}" == "origin/dev"
                 }
             }
 
