@@ -18,7 +18,7 @@ pipeline {
 
         stage('Check Docker version') {
             steps {
-                bat 'env.GIT_BRANCH'
+                echo 'env.GIT_BRANCH'
             }
         }
 
