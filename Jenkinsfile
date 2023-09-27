@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     tools {
-        // install dependecies and add them to the PATH 
+        // install dependecies and add them to the PATH
         maven 'Maven 3.9.4'
         jdk 'jdk17'
     }
